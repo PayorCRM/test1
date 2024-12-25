@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+        <title>Receipt</title>
+
+    </head>
+    <script src="https://apitest.cybersource.com/uc/v1/assets/0.22.4/SecureAcceptance.js"
+    integrity="sha256-t3kWqrqKpWAbH5CCT8d7/xLmdxL8hmsJQwGEKuk1rDo="
+    crossorigin=”anonymous”></script>
+    <script>
+        const authForm= document.getElementById("authForm");
+const transientToken = document.getElementById("transientToken");
+
+const cc = "{{ captureContext }}";
+const showArgs = {
+containers: {
+paymentSelection: "#buttonPaymentListContainer",
+paymentScreen: "#embeddedPaymentContainer"
+}
+};
+Accept(cc)
+.then(function(accept) {
+  // Gets the UC instance (e.g. what card brands I requested, any address information I pre-filled etc.)
+  return accept.unifiedPayments();
+})
+.then(function(up) {
+  // Display the UC instance
+  return up.show(showArgs);
+})
+.then(function(tt) {
+  // Return transient token from UC's UI to our app
+  transientToken.value = tt;
+  authForm.submit();
+}).catch(function(error) {
+  //merchant logic for handling issues
+  alert("something went wrong");});
+
+    </script>
+    <body>
+        <div id="buttonPaymentListContainer"></div>
+        <div id="embeddedPaymentContainer"></div>   
+        <button id="captureContext" value="{{ captureContext }}"></div>   
+    </body>
+</html>
